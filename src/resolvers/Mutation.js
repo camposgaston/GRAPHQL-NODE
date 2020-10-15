@@ -56,8 +56,39 @@ function post(parent, args, context, info) {
     return newLink
 }
 
+async function vote(parent, args, context, info) {
+    // validate the incoming JWT with the getUserId helper function
+    const userId = getUserId(context)
+
+    // check if the vote already exists or not
+    const vote = await context.prisma.vote.findOne({
+            where: {
+                linkId_userId: {
+                    linkId: Number(args.linkId),
+                    userId: userId
+                }
+            }
+        })
+        // If the vote exists, it will be stored in the vote variable, resulting in the boolean true
+    if (Boolean(vote)) {
+        throw new Error(`Already voted for link: ${args.linkId}`)
+    }
+
+    // 3
+    const newVote = context.prisma.vote.create({
+        data: {
+            user: { connect: { id: userId } },
+            link: { connect: { id: Number(args.linkId) } },
+        }
+    })
+    context.pubsub.publish("NEW_VOTE", newVote)
+
+    return newVote
+}
+
 module.exports = {
+    post,
     signup,
     login,
-    post,
+    vote,
 }
