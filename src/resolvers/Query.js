@@ -1,4 +1,4 @@
-// feed function query with params, pagination and sorting
+// feed function query with params, pagination , sorting and count
 async function feed(parent, args, context, info) {
     const where = args.filter ? {
         OR: [
@@ -14,7 +14,12 @@ async function feed(parent, args, context, info) {
         orderBy: args.orderBy
     })
 
-    return links
+    const count = await context.prisma.link.count({ where })
+
+    return {
+        links,
+        count
+    }
 }
 
 module.exports = {
