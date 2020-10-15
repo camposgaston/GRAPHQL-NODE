@@ -15,7 +15,8 @@
         "bcryptjs": "^2.4.3",
         "graphql-yoga": "^1.18.3",
         "jsonwebtoken": "^8.5.1",
-        "nodemon": "^2.0.5"
+        "nodemon": "^2.0.5",
+        "readme-md-generator": "^1.0.0"
     },
     "devDependencies": {
         "@prisma/cli": "^2.9.0"
